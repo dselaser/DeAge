@@ -204,3 +204,56 @@ void Blink_Report_Pins(void)
         HAL_Delay(500); // Wait for 500ms
     }
 }
+
+// U2부터 하나씩 0으로 쓰고, verify 후 결과를 LED로 표시
+// pass_result[i]: 1=합격(LED ON), 0=불합격(LED OFF)
+uint8_t erase_pass_result[CS_PINS_COUNT];
+
+void EEPROM_Erase_And_Verify(SPI_HandleTypeDef* hspi)
+{
+    // 모든 LED OFF
+    for (int i = 0; i < CS_PINS_COUNT; i++)
+    {
+        HAL_GPIO_WritePin(cs_pins[i].port, cs_pins[i].pin, GPIO_PIN_RESET);
+        erase_pass_result[i] = 0;
+    }
+
+    // U2(index 0)부터 하나씩 처리
+    for (int i = 0; i < CS_PINS_COUNT; i++)
+    {
+        // 현재 칩 LED ON (사용자가 어떤 칩을 프로그램하는지 알 수 있음)
+        HAL_GPIO_WritePin(cs_pins[i].port, cs_pins[i].pin, GPIO_PIN_SET);
+        HAL_Delay(200);
+
+        // 전체 주소에 0x00 쓰기
+        for (uint16_t addr = 0; addr < EEPROM_SIZE; addr++)
+        {
+            EEPROM_Write_Byte(cs_pins[i].port, cs_pins[i].pin, addr, 0x00, hspi);
+        }
+
+        // Verify: 한번만 전체 읽어서 확인
+        uint8_t pass = 1;
+        for (uint16_t addr = 0; addr < EEPROM_SIZE; addr++)
+        {
+            uint8_t readData = EEPROM_Read_Byte(cs_pins[i].port, cs_pins[i].pin, addr, hspi);
+            if (readData != 0x00)
+            {
+                pass = 0;
+                break;
+            }
+        }
+
+        if (pass)
+        {
+            // 합격: LED ON 유지
+            erase_pass_result[i] = 1;
+            HAL_GPIO_WritePin(cs_pins[i].port, cs_pins[i].pin, GPIO_PIN_SET);
+        }
+        else
+        {
+            // 불합격: LED OFF
+            erase_pass_result[i] = 0;
+            HAL_GPIO_WritePin(cs_pins[i].port, cs_pins[i].pin, GPIO_PIN_RESET);
+        }
+    }
+}

@@ -478,13 +478,9 @@ void StartDefaultTask(void const * argument)
 	    }
 
 	HAL_Delay(1000);
-	EEPROM_Write_All_Zeros(&hspi2);  // 모두 0 로 입력함
+	EEPROM_Erase_And_Verify(&hspi2);  // U2부터 하나씩 0으로 쓰고 verify, 결과를 LED로 표시
 
 	HAL_Delay(500);
-    LED_Show(1);
-    LED_Show(0);
-    LED_Show(1);
-    LED_Show(0);
 
 
 	MP3_Message(1);

@@ -14,6 +14,7 @@ void EEPROM_Write_All_Zeros(SPI_HandleTypeDef* hspi);
 void EEPROM_Set_All_CS_High(void);
 void EEPROM_Write_Data(uint8_t data,SPI_HandleTypeDef* hspi);
 void Blink_Report_Pins(void);
+void EEPROM_Erase_And_Verify(SPI_HandleTypeDef* hspi);
 
 // CS 핀 배열
 static struct {
