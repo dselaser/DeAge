@@ -1,0 +1,11 @@
+../Core/Src/93C46.c:10:6:EEPROM_Select_CS	2
+../Core/Src/93C46.c:21:6:EEPROM_Write_Enable	1
+../Core/Src/93C46.c:29:6:EEPROM_Write_Disable	1
+../Core/Src/93C46.c:38:6:EEPROM_Write_Byte	1
+../Core/Src/93C46.c:56:9:EEPROM_Read_Byte	1
+../Core/Src/93C46.c:74:6:EEPROM_Erase_Byte	1
+../Core/Src/93C46.c:91:6:EEPROM_Erase_All	1
+../Core/Src/93C46.c:102:6:EEPROM_Write_All	1
+../Core/Src/93C46.c:119:6:EEPROM_Write_All_Zeros	3
+../Core/Src/93C46.c:137:6:EEPROM_Write_Data	4
+../Core/Src/93C46.c:158:6:Blink_Report_Pins	2
